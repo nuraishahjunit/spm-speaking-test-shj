@@ -45,7 +45,7 @@
 
     <!-- Header / Branding Bar -->
     <header class="w-full max-w-4xl flex justify-between items-center mb-4 py-3 px-4 bg-white rounded-2xl shadow-sm border border-slate-100">
-        <div class="flex items-center space-x-3 cursor-pointer" onclick="navigateTo('screen-welcome')">
+        <div class="flex items-center space-x-3 cursor-pointer" onclick="handleHeaderLogoClick()">
             <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-black text-xl shadow-md">
                 S
             </div>
@@ -121,7 +121,7 @@
         <!-- SCREEN 3: CHOOSE SPEAKING PART -->
         <section id="screen-choose-part" class="app-screen hidden space-y-6">
             <div class="flex items-center justify-between">
-                <button onclick="navigateTo('screen-student-info')" class="text-xs font-bold text-slate-500 hover:text-blue-600 flex items-center gap-1 px-3 py-1.5 rounded-xl bg-white border border-slate-200 shadow-sm transition">
+                <button onclick="navigateTo('screen-welcome')" class="text-xs font-bold text-slate-500 hover:text-blue-600 flex items-center gap-1 px-3 py-1.5 rounded-xl bg-white border border-slate-200 shadow-sm transition">
                     ← Back
                 </button>
             </div>
@@ -190,7 +190,7 @@
             </div>
         </section>
 
-        <!-- SCREEN 5: TOPIC CONFIRMATION (Hidden Task until START - For Part 2 & Part 3) -->
+        <!-- SCREEN 5: TOPIC CONFIRMATION -->
         <section id="screen-topic-selected" class="app-screen hidden bg-white rounded-3xl p-6 sm:p-10 shadow-xl border border-slate-100 max-w-lg mx-auto w-full text-center relative">
             <button onclick="navigateTo('screen-choose-topic')" class="absolute top-6 left-6 text-xs font-bold text-slate-500 hover:text-blue-600 flex items-center gap-1 transition">
                 ← Back
@@ -200,18 +200,15 @@
             </div>
             <h2 id="selected-topic-title" class="text-2xl font-bold text-slate-900 mb-6">Topic Title</h2>
             <p class="text-slate-500 text-sm mb-8 leading-relaxed">
-                You are ready to begin. Press <strong>START</strong> to reveal your question/task and start your preparation time.
+                You are ready to begin. Press <strong>START</strong> to grant microphone permission, view your question, and begin your preparation time.
             </p>
             <button onclick="confirmStartTopic()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-500/25 text-base transition">
                 START
             </button>
         </section>
 
-        <!-- SCREEN 6: PREPARATION SCREEN (Part 2 & Part 3 only) -->
+        <!-- SCREEN 6: PREPARATION SCREEN -->
         <section id="screen-prep" class="app-screen hidden bg-white rounded-3xl p-6 sm:p-10 shadow-xl border border-slate-100 max-w-2xl mx-auto w-full text-center relative">
-            <button onclick="handleCancelAndBack()" class="absolute top-6 left-6 text-xs font-bold text-slate-500 hover:text-blue-600 flex items-center gap-1 transition">
-                ← Back
-            </button>
             <div class="mb-4 pt-4">
                 <span id="prep-part-tag" class="text-xs font-extrabold uppercase tracking-widest text-blue-600 bg-blue-50 px-3 py-1 rounded-full">GET READY</span>
             </div>
@@ -219,9 +216,8 @@
             <div id="prep-timer-display" class="text-5xl sm:text-6xl font-black text-blue-600 font-mono tracking-tight mb-6">
                 00:20
             </div>
-            <p class="text-xs text-slate-500 mb-6">Use this time to plan your answer.</p>
+            <p class="text-xs text-slate-500 mb-6">Use this time to plan your answer. Recording will begin automatically when preparation finishes.</p>
 
-            <!-- Task / Question Box -->
             <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 mb-8 text-left">
                 <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Your Task:</h4>
                 <div id="prep-question-box" class="text-slate-800 font-semibold text-base sm:text-lg leading-relaxed">
@@ -229,76 +225,51 @@
                 </div>
             </div>
 
-            <button onclick="skipPreparation()" class="w-full sm:w-auto bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 px-8 rounded-xl text-sm transition">
-                SKIP PREPARATION
-            </button>
-        </section>
-
-        <!-- SCREEN 7: START SPEAKING PROMPT (Part 2 & Part 3 only) -->
-        <section id="screen-start-speaking-prompt" class="app-screen hidden bg-white rounded-3xl p-6 sm:p-10 shadow-xl border border-slate-100 max-w-lg mx-auto w-full text-center relative">
-            <button onclick="handleCancelAndBack()" class="absolute top-6 left-6 text-xs font-bold text-slate-500 hover:text-blue-600 flex items-center gap-1 transition">
-                ← Back
-            </button>
-            <div class="w-20 h-20 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-6 shadow-inner pt-2 mt-4">
-                🎙️
-            </div>
-            <h2 class="text-2xl font-bold text-slate-900 mb-2">PREPARATION COMPLETE</h2>
-            <p class="text-slate-500 text-sm mb-8">When you are ready, press the button below to start recording your answer.</p>
-            
-            <button onclick="initiateMicrophoneAndStart()" class="w-full bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-extrabold py-4 px-8 rounded-2xl text-lg shadow-lg shadow-red-500/25 transition transform hover:scale-[1.02] flex items-center justify-center space-x-2">
-                <span>🎙 START SPEAKING</span>
+            <button onclick="finishPreparationEarly()" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-10 rounded-xl text-sm transition shadow-md">
+                I'M READY
             </button>
         </section>
 
         <!-- SCREEN 8: RECORDING SCREEN -->
         <section id="screen-recording" class="app-screen hidden bg-white rounded-3xl p-6 sm:p-10 shadow-xl border border-slate-100 max-w-2xl mx-auto w-full text-center relative overflow-hidden">
-            <button onclick="handleAbortRecordingAndBack()" class="absolute top-6 left-6 text-xs font-bold text-slate-500 hover:text-red-600 flex items-center gap-1 transition">
-                ← Back
-            </button>
-            <!-- Recording Status Badge -->
-            <div class="inline-flex items-center space-x-2 bg-red-50 border border-red-100 px-4 py-1.5 rounded-full mb-4 mt-4">
+            <div id="simulated-mic-banner" class="hidden bg-amber-50 border border-amber-200 text-amber-800 text-xs px-3 py-1.5 rounded-xl mb-3 font-semibold items-center justify-center gap-1.5 max-w-md mx-auto">
+                <span>🎧 Simulated Audio Mode Active (Mic restricted by iframe/browser)</span>
+            </div>
+
+            <div class="inline-flex items-center space-x-2 bg-red-50 border border-red-100 px-4 py-1.5 rounded-full mb-4 mt-2">
                 <span class="w-3 h-3 bg-red-600 rounded-full animate-pulse-slow"></span>
                 <span id="recording-status-text" class="text-xs font-extrabold uppercase tracking-wider text-red-600">🔴 RECORDING</span>
             </div>
 
-            <!-- Stage Heading -->
             <h3 id="recording-stage-title" class="text-sm font-bold uppercase tracking-wider text-slate-500 mb-1">SPEAKING TIME</h3>
             
-            <!-- Recording Timer -->
             <div id="recording-timer-display" class="text-6xl sm:text-7xl font-black text-slate-900 font-mono tracking-tight mb-6">
                 00:20
             </div>
 
-            <!-- Transition Overlay Banner for Part 3 Stage 2 -->
             <div id="part3-transition-banner" class="hidden bg-amber-500 text-white font-bold p-4 rounded-xl mb-6 shadow-md transition-all">
                 <div class="text-base uppercase tracking-wider">STAGE 2: MAKE A DECISION</div>
                 <div class="text-xs opacity-90 mt-1">Choose the best option and explain your reasons.</div>
             </div>
 
-            <!-- Task Display during recording -->
             <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 mb-8 text-left max-h-60 overflow-y-auto">
                 <div id="recording-task-display" class="text-slate-800 text-sm sm:text-base font-medium">
                     <!-- Dynamic task view -->
                 </div>
             </div>
 
-            <!-- Dynamic Buttons Container -->
             <div id="recording-action-container" class="w-full flex justify-center">
-                <!-- Populated dynamically based on Part & Stage -->
+                <!-- Populated dynamically -->
             </div>
         </section>
 
         <!-- SCREEN 9: REVIEW RECORDING -->
         <section id="screen-review" class="app-screen hidden bg-white rounded-3xl p-6 sm:p-10 shadow-xl border border-slate-100 max-w-xl mx-auto w-full relative">
-            <button onclick="handleCancelAndBack()" class="absolute top-6 left-6 text-xs font-bold text-slate-500 hover:text-blue-600 flex items-center gap-1 transition">
-                ← Back
-            </button>
             <div class="text-center mb-6 pt-4">
                 <h2 class="text-2xl font-bold text-slate-900">REVIEW YOUR ANSWER</h2>
                 <p class="text-xs text-slate-500 mt-1">Listen to your recording before submitting</p>
             </div>
 
-            <!-- Metadata Summary Box -->
             <div class="bg-slate-50 rounded-2xl p-5 mb-6 border border-slate-200 space-y-2 text-xs sm:text-sm">
                 <div class="flex justify-between border-b border-slate-200 pb-2">
                     <span class="text-slate-500">Student:</span>
@@ -322,12 +293,10 @@
                 </div>
             </div>
 
-            <!-- Audio Player Widget -->
             <div class="mb-8">
                 <audio id="audio-playback" controls class="w-full rounded-xl bg-slate-100 p-2"></audio>
             </div>
 
-            <!-- Actions -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <button onclick="handleRecordAgain()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3.5 rounded-xl text-sm transition flex items-center justify-center space-x-2">
                     <span>🔄 RECORD AGAIN</span>
@@ -368,20 +337,34 @@
 
         <!-- SCREEN 11: MICROPHONE ERROR SCREEN -->
         <section id="screen-mic-error" class="app-screen hidden bg-white rounded-3xl p-6 sm:p-10 shadow-xl border border-slate-100 max-w-lg mx-auto w-full text-center">
-            <div class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-6">
-                ⚠️
+            <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4 font-bold shadow-inner">
+                🎙️
             </div>
-            <h2 class="text-2xl font-bold text-slate-900 mb-2">MICROPHONE ACCESS NEEDED</h2>
-            <p class="text-slate-600 text-sm mb-6 leading-relaxed">
-                Your browser did not allow microphone access. Please allow microphone access in your browser settings and try again.
+            <h2 class="text-2xl font-bold text-slate-900 mb-2">MICROPHONE ACCESS RESTRICTED</h2>
+            <p class="text-slate-600 text-xs sm:text-sm mb-4 leading-relaxed">
+                Your browser or sandbox frame blocked microphone permission (<code class="bg-slate-100 px-1.5 py-0.5 rounded text-red-600 font-mono text-xs">NotAllowedError</code>).
             </p>
-            <div class="flex space-x-3">
-                <button onclick="retryMicrophoneAccess()" class="w-1/2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl text-sm transition">
-                    TRY AGAIN
+
+            <div class="bg-blue-50 border border-blue-100 rounded-2xl p-4 text-left text-xs text-slate-700 mb-6 space-y-2">
+                <p class="font-bold text-blue-900">How to enable real microphone access:</p>
+                <ul class="list-disc pl-4 space-y-1 text-slate-600">
+                    <li>Click the lock or camera/mic icon in your browser URL bar and select <strong>Allow Microphone</strong>.</li>
+                    <li>If running in a restricted preview frame, open this site in a direct browser tab.</li>
+                </ul>
+            </div>
+
+            <div class="space-y-2.5">
+                <button onclick="enableSimulatedMicMode()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl text-xs sm:text-sm transition shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2">
+                    <span>🎧 CONTINUE WITH SIMULATED / DEMO MIC</span>
                 </button>
-                <button onclick="navigateTo('screen-choose-part')" class="w-1/2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 rounded-xl text-sm transition">
-                    BACK
-                </button>
+                <div class="flex space-x-2 pt-1">
+                    <button onclick="retryMicrophoneAccess()" class="w-1/2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl text-xs transition">
+                        🔄 RETRY REAL MIC
+                    </button>
+                    <button onclick="navigateTo('screen-choose-part')" class="w-1/2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl text-xs transition">
+                        ← BACK TO PARTS
+                    </button>
+                </div>
             </div>
         </section>
 
@@ -398,25 +381,28 @@
                 <button onclick="retryFetchQuestions()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-xl text-sm transition">
                     RETRY
                 </button>
-                <button onclick="navigateTo('screen-welcome')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 px-6 rounded-xl text-sm transition">
+                <button onclick="navigateTo('screen-welcome')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-6 py-3 rounded-xl text-sm transition font-bold">
                     HOME
                 </button>
             </div>
         </section>
 
         <!-- SCREEN 13: TEACHER DASHBOARD -->
-        <section id="screen-teacher-dashboard" class="app-screen hidden bg-white rounded-3xl p-6 sm:p-10 shadow-xl border border-slate-100 max-w-4xl mx-auto w-full">
-            <div class="flex justify-between items-center mb-8 pb-4 border-b border-slate-100">
+        <section id="screen-teacher-dashboard" class="app-screen hidden bg-white rounded-3xl p-6 sm:p-10 shadow-xl border border-slate-100 max-w-5xl mx-auto w-full">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 pb-4 border-b border-slate-100">
                 <div>
                     <h2 class="text-2xl font-bold text-slate-900">TEACHER DASHBOARD</h2>
-                    <p class="text-xs text-slate-500">Submission monitoring and response log</p>
+                    <p class="text-xs text-slate-500">Submission monitoring and live response log from Google Apps Script</p>
                 </div>
                 <div class="flex items-center gap-2">
+                    <button id="btn-refresh-dashboard" onclick="fetchTeacherDashboardData()" class="bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+                        <span id="refresh-icon">🔄</span> REFRESH
+                    </button>
                     <button onclick="lockTeacherDashboard()" class="bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1">
-                        🔒 Lock Dashboard
+                        🔒 Lock
                     </button>
                     <button onclick="navigateTo('screen-welcome')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-xs font-bold transition">
-                        ← Back to Home
+                        ← Home
                     </button>
                 </div>
             </div>
@@ -442,25 +428,23 @@
             </div>
 
             <!-- Submissions Table Container -->
-            <div class="overflow-x-auto">
+            <div class="overflow-x-auto rounded-2xl border border-slate-100">
                 <table class="w-full text-left text-xs text-slate-600 border-collapse">
                     <thead>
                         <tr class="bg-slate-50 border-b border-slate-200 font-bold uppercase tracking-wider text-slate-500">
                             <th class="p-3">Student</th>
                             <th class="p-3">Class</th>
                             <th class="p-3">Part</th>
-                            <th class="p-3">Topic</th>
-                            <th class="p-3">Date</th>
-                            <th class="p-3">Time</th>
+                            <th class="p-3">Topic / Question</th>
+                            <th class="p-3">Date & Time</th>
                             <th class="p-3">Duration</th>
-                            <th class="p-3">Audio</th>
-                            <th class="p-3 text-center">Actions</th>
+                            <th class="p-3">Audio Recording</th>
+                            <th class="p-3 text-center">Action</th>
                         </tr>
                     </thead>
                     <tbody id="dashboard-table-body">
-                        <!-- Populated dynamically -->
                         <tr>
-                            <td colspan="9" class="p-6 text-center text-slate-400">No submissions yet.</td>
+                            <td colspan="8" class="p-6 text-center text-slate-400">Loading submissions from cloud server...</td>
                         </tr>
                     </tbody>
                 </table>
@@ -502,6 +486,28 @@
         </div>
     </div>
 
+    <!-- DELETE RECORDING CONFIRMATION MODAL -->
+    <div id="delete-confirm-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-sm w-full shadow-2xl border border-slate-100 text-center relative">
+            <div class="w-12 h-12 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center text-xl mx-auto mb-4 font-bold shadow-inner">
+                🗑️
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 mb-2">Delete Recording?</h3>
+            <p class="text-xs text-slate-500 mb-6 leading-relaxed">
+                Are you sure you want to delete this recording? This will move the audio file to Google Drive Trash.
+            </p>
+            
+            <div class="flex gap-2">
+                <button type="button" onclick="closeDeleteConfirmModal()" class="w-1/2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 rounded-xl text-xs transition">
+                    CANCEL
+                </button>
+                <button id="btn-confirm-delete" type="button" onclick="executeDeleteRecording()" class="w-1/2 bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl text-xs transition shadow-md shadow-red-500/20">
+                    DELETE
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="w-full max-w-4xl text-center py-4 text-xs text-slate-400 mt-6">
         SPM Speaking Practice Application • Hostable on GitHub Pages
@@ -515,10 +521,11 @@
         const TEACHER_PASSWORD = "sorarusou98";
         let teacherUnlocked = false;
 
-        // Exact Submission Web App URL (UNCHANGED)
-        const GOOGLE_APPS_SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzQLHlqxf6hj5gTpekX2q3rkd2i9tGgQbrBffMRr8kw4TlwwduNJeM-BFT4IS_VNHuhqg/exec";
+        // SUBMISSION APPS SCRIPT URL
+        // Change /dev to /exec when the Web App is deployed for production.
+        const GOOGLE_APPS_SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyWKQjktAbF_hBzPmdFB0l10QRZc5JgGJXP4tTOXS/dev";
 
-        // Exact Question Bank API Web App URL
+        // Exact Question Bank API Web App URL (DO NOT CHANGE)
         const QUESTION_BANK_API_URL = "https://script.google.com/macros/s/AKfycbw0Qt3eoBEgfI5HqbU624-nF7Yjy5lziB1x-yyVPPNrzwUPh-HH-lOpQadXIMyY1blW3A/exec";
 
         /* ==========================================================================
@@ -536,14 +543,26 @@
             questionsLoaded: false,
             questionsLoading: false,
 
+            isSimulatedMic: false,      // Fallback flag when real mic is blocked
+            isRecordAgain: false,       // Flag indicating if current attempt is a RECORD AGAIN attempt
+            sessionLocked: false,       // Strict session navigation lock
+
             prepTimerId: null,
             speakingTimerId: null,
             recordingStartTime: null,   // Exact timestamp when recording started
+            decisionStartTime: null,
             
             mediaRecorder: null,
             mediaStream: null,
             audioChunks: [],
             
+            // Separate Part 3 Audio Tracking
+            discussionChunks: [],
+            discussionBlob: null,
+            decisionChunks: [],
+            decisionBlob: null,
+            part3StoppedEarly: false,
+
             recordedBlob: null,
             recordedAudioUrl: null,
             recordingDuration: 0,       // Total accumulated seconds
@@ -553,8 +572,13 @@
             decisionDuration: 0,        // Seconds in decision
             
             isRecording: false,
-            isUploading: false
+            isUploading: false,
+            mimeType: 'audio/webm'
         };
+
+        // Modal state for deletion confirmation
+        let pendingDeleteId = null;
+        let pendingDeleteFileId = null;
 
         /* ==========================================================================
            3. DYNAMIC QUESTION BANK LOADER
@@ -562,16 +586,12 @@
         async function fetchQuestionsFromBank() {
             appState.questionsLoading = true;
 
-            // Built-in SPM Question Bank fallback for offline/CORS/API schema variations
             const fallbackQuestions = [
-                // Part 1 Questions
                 { id: "p1_1", part: "1", topic: "Daily Life", question: "What do you usually do after school?", active: true },
                 { id: "p1_2", part: "1", topic: "Hobbies", question: "What is your favourite hobby and why do you like it?", active: true },
                 { id: "p1_3", part: "1", topic: "Friends", question: "What qualities do you look for in a good friend?", active: true },
                 { id: "p1_4", part: "1", topic: "Shopping", question: "Where do you usually prefer to shop and why?", active: true },
                 { id: "p1_5", part: "1", topic: "Technology", question: "How often do you use social media and what for?", active: true },
-                
-                // Part 2 Topics
                 {
                     id: "p2_1",
                     part: "2",
@@ -611,8 +631,6 @@
                     ],
                     active: true
                 },
-
-                // Part 3 Topics
                 {
                     id: "p3_1",
                     part: "3",
@@ -667,13 +685,11 @@
                     appState.questionsLoaded = true;
                     return true;
                 } else {
-                    console.warn("API returned no valid question list. Using fallback SPM question bank.");
                     appState.questions = fallbackQuestions;
                     appState.questionsLoaded = true;
                     return true;
                 }
             } catch (err) {
-                console.warn("Could not load remote questions. Using offline SPM question bank:", err);
                 appState.questions = fallbackQuestions;
                 appState.questionsLoaded = true;
                 return true;
@@ -684,7 +700,6 @@
 
         async function ensureQuestionsLoaded() {
             if (appState.questionsLoaded) return true;
-            
             const success = await fetchQuestionsFromBank();
             if (!success) {
                 document.getElementById('api-error-message').textContent = "Unable to load questions. Please check your internet connection and try again.";
@@ -720,13 +735,23 @@
         }
 
         /* ==========================================================================
-           4. UI NAVIGATION & USER STATE HANDLERS
+           4. UI NAVIGATION & USER STATE HANDLERS (WITH SESSION LOCK)
            ========================================================================== */
-        function navigateTo(screenId) {
+        function navigateTo(screenId, force = false) {
+            // Guard against navigating away during active speaking session
+            if (appState.sessionLocked && !force) {
+                const allowedInternalScreens = ['screen-prep', 'screen-recording', 'screen-review', 'screen-mic-error'];
+                if (!allowedInternalScreens.includes(screenId)) {
+                    showToast("Navigation is locked during an active speaking practice session.", "info");
+                    return;
+                }
+            }
+
             if (screenId === 'screen-teacher-dashboard' && !teacherUnlocked) {
                 promptTeacherPassword();
                 return;
             }
+
             document.querySelectorAll('.app-screen').forEach(screen => {
                 screen.classList.add('hidden');
             });
@@ -737,31 +762,36 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+        function handleHeaderLogoClick() {
+            if (appState.sessionLocked) {
+                showToast("Cannot return to home during an active session.", "info");
+                return;
+            }
+            navigateTo('screen-welcome');
+        }
+
+        // Intercept browser BACK gestures while session is locked
+        window.addEventListener('popstate', function (e) {
+            if (appState.sessionLocked) {
+                history.pushState({ locked: true }, document.title, location.href);
+                showToast("Navigation locked during active speaking practice.", "info");
+            }
+        });
+
+        function lockActiveSession() {
+            appState.sessionLocked = true;
+            history.pushState({ locked: true }, document.title, location.href);
+        }
+
+        function unlockActiveSession() {
+            appState.sessionLocked = false;
+        }
+
         async function handleStartClick() {
+            appState.isRecordAgain = false;
             const loaded = await ensureQuestionsLoaded();
             if (loaded) {
                 navigateTo('screen-student-info');
-            }
-        }
-
-        function handleCancelAndBack() {
-            stopAllTimers();
-            cleanupRecordingState();
-            if (appState.selectedPart === 2 || appState.selectedPart === 3) {
-                navigateTo('screen-choose-topic');
-            } else {
-                navigateTo('screen-choose-part');
-            }
-        }
-
-        function handleAbortRecordingAndBack() {
-            stopAllTimers();
-            stopMicrophoneStream();
-            cleanupRecordingState();
-            if (appState.selectedPart === 2 || appState.selectedPart === 3) {
-                navigateTo('screen-choose-topic');
-            } else {
-                navigateTo('screen-choose-part');
             }
         }
 
@@ -794,13 +824,13 @@
            5. PART SELECTION & TOPIC CHOICE LOGIC
            ========================================================================== */
         async function selectPart1() {
+            appState.isRecordAgain = false;
             const loaded = await ensureQuestionsLoaded();
             if (!loaded) return;
 
             appState.selectedPart = 1;
             appState.selectedTopicObj = null;
 
-            // Filter active Part 1 questions
             const p1Questions = appState.questions.filter(q => {
                 const partStr = String(q.part || '').toLowerCase();
                 return partStr.includes('1') || partStr.includes('part 1');
@@ -812,21 +842,19 @@
                 return;
             }
 
-            // Pick random active question
             const randomObj = p1Questions[Math.floor(Math.random() * p1Questions.length)];
             appState.selectedTopicObj = randomObj;
             appState.currentQuestion = randomObj.question || randomObj.topic || "Part 1 Question";
             appState.cleanPrompts = extractCleanPrompts(randomObj);
 
-            // Set question box content for immediate display during recording
             document.getElementById('prep-question-box').innerHTML = `<p class="font-bold text-slate-900 text-base sm:text-lg">${appState.currentQuestion}</p>`;
 
-            // PART 1 REQUIRED BEHAVIOUR: NO preparation stage.
-            // Immediately request mic permission when recording is about to start, then start 20s recording.
+            lockActiveSession();
             initiateMicrophoneAndStart();
         }
 
         async function selectPart2() {
+            appState.isRecordAgain = false;
             const loaded = await ensureQuestionsLoaded();
             if (!loaded) return;
 
@@ -864,6 +892,7 @@
         }
 
         async function selectPart3() {
+            appState.isRecordAgain = false;
             const loaded = await ensureQuestionsLoaded();
             if (!loaded) return;
 
@@ -901,6 +930,7 @@
         }
 
         function onTopicChosen(topicObj) {
+            appState.isRecordAgain = false;
             appState.selectedTopicObj = topicObj;
             appState.currentQuestion = topicObj.question || topicObj.topic || "";
             appState.cleanPrompts = extractCleanPrompts(topicObj);
@@ -909,7 +939,10 @@
             navigateTo('screen-topic-selected');
         }
 
-        function confirmStartTopic() {
+        async function confirmStartTopic() {
+            appState.isRecordAgain = false;
+            lockActiveSession();
+
             const topic = appState.selectedTopicObj;
             const prompts = appState.cleanPrompts;
 
@@ -952,7 +985,21 @@
                 `;
             }
 
-            startPreparation(20);
+            if (appState.isSimulatedMic) {
+                startPreparation(20);
+                return;
+            }
+
+            try {
+                if (!appState.mediaStream || !appState.mediaStream.active) {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+                    appState.mediaStream = stream;
+                }
+                startPreparation(20);
+            } catch (err) {
+                console.error("Microphone Access Error:", err);
+                navigateTo('screen-mic-error', true);
+            }
         }
 
         /* ==========================================================================
@@ -975,7 +1022,7 @@
 
         function startPreparation(seconds = 20) {
             stopAllTimers();
-            navigateTo('screen-prep');
+            navigateTo('screen-prep', true);
 
             let remaining = seconds;
             const display = document.getElementById('prep-timer-display');
@@ -990,47 +1037,127 @@
                 if (remaining <= 0) {
                     display.textContent = "00:00";
                     stopAllTimers();
-                    showStartSpeakingPrompt();
+                    onPreparationComplete();
                 } else {
                     display.textContent = formatTime(remaining);
                 }
             }, 250);
         }
 
-        function skipPreparation() {
+        function finishPreparationEarly() {
             stopAllTimers();
-            showStartSpeakingPrompt();
+            onPreparationComplete();
         }
 
-        function showStartSpeakingPrompt() {
-            navigateTo('screen-start-speaking-prompt');
+        function onPreparationComplete() {
+            if (appState.selectedPart === 2) {
+                startPart2Recording();
+            } else if (appState.selectedPart === 3) {
+                startPart3DiscussionRecording();
+            }
         }
 
         /* ==========================================================================
            7. RECORDING & MEDIARECORDER ENGINE
            ========================================================================== */
+        function createSyntheticAudioBlob(durationSeconds) {
+            const sampleRate = 22050;
+            const dur = Math.max(1, durationSeconds || 3);
+            const numSamples = Math.floor(sampleRate * dur);
+            
+            const buffer = new Float32Array(numSamples);
+            for (let i = 0; i < numSamples; i++) {
+                const t = i / sampleRate;
+                const freq = 220 + Math.sin(t * 10) * 80;
+                const env = Math.sin((t / dur) * Math.PI);
+                buffer[i] = Math.sin(2 * Math.PI * freq * t) * 0.2 * env;
+            }
+
+            const wavBuffer = new ArrayBuffer(44 + numSamples * 2);
+            const view = new DataView(wavBuffer);
+
+            function writeString(offset, string) {
+                for (let i = 0; i < string.length; i++) {
+                    view.setUint8(offset + i, string.charCodeAt(i));
+                }
+            }
+
+            writeString(0, 'RIFF');
+            view.setUint32(4, 36 + numSamples * 2, true);
+            writeString(8, 'WAVE');
+            writeString(12, 'fmt ');
+            view.setUint32(16, 16, true);
+            view.setUint16(20, 1, true); // PCM
+            view.setUint16(22, 1, true); // Mono
+            view.setUint32(24, sampleRate, true);
+            view.setUint32(28, sampleRate * 2, true);
+            view.setUint16(32, 2, true);
+            view.setUint16(34, 16, true);
+            writeString(36, 'data');
+            view.setUint32(40, numSamples * 2, true);
+
+            let index = 44;
+            for (let i = 0; i < numSamples; i++) {
+                const s = Math.max(-1, Math.min(1, buffer[i]));
+                view.setInt16(index, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+                index += 2;
+            }
+
+            return new Blob([wavBuffer], { type: 'audio/wav' });
+        }
+
+        function enableSimulatedMicMode() {
+            appState.isSimulatedMic = true;
+            showToast("Demo Mode enabled! Using simulated audio recording.", "info");
+
+            if (appState.selectedPart === 1) {
+                startActualRecording();
+            } else if (appState.selectedPart === 2 || appState.selectedPart === 3) {
+                if (appState.isRecordAgain) {
+                    if (appState.selectedPart === 2) startPart2Recording();
+                    if (appState.selectedPart === 3) startPart3DiscussionRecording();
+                } else {
+                    startPreparation(20);
+                }
+            } else {
+                navigateTo('screen-choose-part', true);
+            }
+        }
+
         async function initiateMicrophoneAndStart() {
-            cleanupRecordingState();
+            cleanupRecordingStateExceptStream();
+
+            if (appState.isSimulatedMic) {
+                startActualRecording();
+                return;
+            }
 
             try {
-                // Request microphone permission when recording is about to begin
-                const stream = await navigator.mediaDevices.getUserMedia({
-                    audio: true,
-                    video: false
-                });
-
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
                 appState.mediaStream = stream;
                 setupMediaRecorder(stream);
                 startActualRecording();
 
             } catch (err) {
                 console.error("Microphone Access Error:", err);
-                navigateTo('screen-mic-error');
+                navigateTo('screen-mic-error', true);
             }
         }
 
         function retryMicrophoneAccess() {
-            initiateMicrophoneAndStart();
+            appState.isSimulatedMic = false;
+            if (appState.selectedPart === 1) {
+                initiateMicrophoneAndStart();
+            } else if (appState.selectedPart === 2 || appState.selectedPart === 3) {
+                if (appState.isRecordAgain) {
+                    if (appState.selectedPart === 2) startPart2Recording();
+                    if (appState.selectedPart === 3) startPart3DiscussionRecording();
+                } else {
+                    confirmStartTopic();
+                }
+            } else {
+                navigateTo('screen-choose-part', true);
+            }
         }
 
         function detectSupportedMimeType() {
@@ -1049,16 +1176,15 @@
         }
 
         function setupMediaRecorder(stream) {
+            if (!stream) return;
             appState.audioChunks = [];
             const mime = detectSupportedMimeType();
             appState.mimeType = mime;
-
             const options = mime ? { mimeType: mime } : {};
-            
+
             try {
                 appState.mediaRecorder = new MediaRecorder(stream, options);
             } catch (e) {
-                console.warn("MediaRecorder creation with mimeType failed, falling back to default.", e);
                 appState.mediaRecorder = new MediaRecorder(stream);
                 appState.mimeType = appState.mediaRecorder.mimeType || 'audio/webm';
             }
@@ -1079,14 +1205,42 @@
             };
         }
 
+        async function ensureMicAndExecute(callbackFn) {
+            cleanupRecordingStateExceptStream();
+            if (appState.isSimulatedMic) {
+                callbackFn();
+                return;
+            }
+            try {
+                if (!appState.mediaStream || !appState.mediaStream.active || appState.mediaStream.getAudioTracks().every(t => t.readyState === 'ended')) {
+                    appState.mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+                }
+                callbackFn();
+            } catch (err) {
+                console.error("Microphone Access Error:", err);
+                navigateTo('screen-mic-error', true);
+            }
+        }
+
         function startActualRecording() {
             appState.isRecording = true;
             appState.recordingStartTime = Date.now();
-            appState.mediaRecorder.start(100); // Collect timeslices
             
-            navigateTo('screen-recording');
+            if (appState.mediaRecorder && !appState.isSimulatedMic) {
+                appState.mediaRecorder.start(100);
+            }
+            
+            navigateTo('screen-recording', true);
 
-            // Setup Recording Screen UI Task Box
+            const simBanner = document.getElementById('simulated-mic-banner');
+            if (appState.isSimulatedMic) {
+                simBanner.classList.remove('hidden');
+                simBanner.classList.add('flex');
+            } else {
+                simBanner.classList.add('hidden');
+                simBanner.classList.remove('flex');
+            }
+
             const taskDisplay = document.getElementById('recording-task-display');
             taskDisplay.innerHTML = document.getElementById('prep-question-box').innerHTML;
 
@@ -1100,49 +1254,82 @@
                 document.getElementById('recording-status-text').textContent = "🔴 RECORDING";
                 document.getElementById('recording-status-text').className = "text-xs font-extrabold uppercase tracking-wider text-red-600";
                 
-                // PART 1: Visible STOP & SUBMIT button during entire 20-second period
                 actionContainer.innerHTML = `
                     <button onclick="stopRecordingManual()" class="w-full sm:w-auto bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-extrabold py-3.5 px-10 rounded-2xl text-base shadow-lg shadow-red-500/20 transition flex items-center justify-center space-x-2">
                         <span>⏹ STOP & SUBMIT</span>
                     </button>
                 `;
                 runSpeakingTimer(20);
-
-            } else if (appState.selectedPart === 2) {
-                document.getElementById('recording-stage-title').textContent = "SPEAKING TIME";
-                document.getElementById('recording-status-text').textContent = "🔴 RECORDING";
-                document.getElementById('recording-status-text').className = "text-xs font-extrabold uppercase tracking-wider text-red-600";
-                actionContainer.innerHTML = `
-                    <button onclick="stopRecordingManual()" class="w-full sm:w-auto bg-slate-900 hover:bg-black text-white font-bold py-3.5 px-10 rounded-xl text-base shadow-lg transition">
-                        STOP RECORDING
-                    </button>
-                `;
-                runSpeakingTimer(60);
-
-            } else if (appState.selectedPart === 3) {
-                appState.part3Stage = 1; // Stage 1: Discussion
-                appState.discussionDuration = 0;
-                appState.decisionDuration = 0;
-                
-                document.getElementById('recording-stage-title').textContent = "STAGE 1: DISCUSSION";
-                document.getElementById('recording-status-text').textContent = "🔴 DISCUSSION";
-                document.getElementById('recording-status-text').className = "text-xs font-extrabold uppercase tracking-wider text-red-600";
-                
-                actionContainer.innerHTML = `
-                    <div class="flex flex-col sm:flex-row gap-3 w-full justify-center items-center">
-                        <button onclick="stopAndSubmitEarly()" class="w-full sm:w-1/2 bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 px-4 rounded-xl text-xs sm:text-sm shadow-md transition flex items-center justify-center space-x-1">
-                            <span>⏹ STOP & SUBMIT</span>
-                        </button>
-                        <button id="btn-part3-action" onclick="finishDiscussionEarly()" class="w-full sm:w-1/2 bg-amber-600 hover:bg-amber-700 text-white font-bold py-3.5 px-4 rounded-xl text-xs sm:text-sm shadow-md transition flex items-center justify-center space-x-1">
-                            <span>FINISH DISCUSSION & GO TO DECISION →</span>
-                        </button>
-                    </div>
-                `;
-                runPart3DiscussionTimer(120);
             }
         }
 
-        // Standard Timer for Part 1 (20s) & Part 2 (60s)
+        function startPart2Recording() {
+            cleanupRecordingStateExceptStream();
+            appState.isRecording = true;
+            appState.recordingStartTime = Date.now();
+
+            navigateTo('screen-recording', true);
+
+            const simBanner = document.getElementById('simulated-mic-banner');
+            if (appState.isSimulatedMic) {
+                simBanner.classList.remove('hidden');
+                simBanner.classList.add('flex');
+            } else {
+                simBanner.classList.add('hidden');
+                simBanner.classList.remove('flex');
+            }
+
+            document.getElementById('recording-stage-title').textContent = "PART 2 • SPEAKING TIME";
+            document.getElementById('recording-status-text').textContent = "🔴 RECORDING";
+            document.getElementById('recording-status-text').className = "text-xs font-extrabold uppercase tracking-wider text-red-600";
+
+            document.getElementById('recording-task-display').innerHTML = document.getElementById('prep-question-box').innerHTML;
+            document.getElementById('part3-transition-banner').classList.add('hidden');
+
+            const actionContainer = document.getElementById('recording-action-container');
+            actionContainer.innerHTML = `
+                <button onclick="stopRecordingManual()" class="w-full sm:w-auto bg-slate-900 hover:bg-black text-white font-bold py-3.5 px-10 rounded-xl text-base shadow-lg transition">
+                    STOP RECORDING
+                </button>
+            `;
+
+            if (!appState.isSimulatedMic) {
+                setupMediaRecorderForPart2();
+                if (appState.mediaRecorder) appState.mediaRecorder.start(100);
+            }
+            runSpeakingTimer(60);
+        }
+
+        function setupMediaRecorderForPart2() {
+            if (!appState.mediaStream) return;
+            appState.audioChunks = [];
+            const mime = detectSupportedMimeType();
+            appState.mimeType = mime;
+            const options = mime ? { mimeType: mime } : {};
+
+            try {
+                appState.mediaRecorder = new MediaRecorder(appState.mediaStream, options);
+            } catch (e) {
+                appState.mediaRecorder = new MediaRecorder(appState.mediaStream);
+                appState.mimeType = appState.mediaRecorder.mimeType || 'audio/webm';
+            }
+
+            appState.mediaRecorder.ondataavailable = (event) => {
+                if (event.data && event.data.size > 0) {
+                    appState.audioChunks.push(event.data);
+                }
+            };
+
+            appState.mediaRecorder.onstop = () => {
+                const blob = new Blob(appState.audioChunks, { type: appState.mimeType || 'audio/webm' });
+                appState.recordedBlob = blob;
+                appState.recordedAudioUrl = URL.createObjectURL(blob);
+                
+                stopMicrophoneStream();
+                prepareReviewScreen();
+            };
+        }
+
         function runSpeakingTimer(totalSeconds) {
             stopAllTimers();
             let remaining = totalSeconds;
@@ -1169,6 +1356,127 @@
         /* ==========================================================================
            8. PART 3 TWO-STAGE RECORDING LOGIC
            ========================================================================== */
+        function startPart3DiscussionRecording() {
+            cleanupRecordingStateExceptStream();
+            appState.isRecording = true;
+            appState.part3Stage = 1;
+            appState.discussionChunks = [];
+            appState.discussionBlob = null;
+            appState.decisionChunks = [];
+            appState.decisionBlob = null;
+            appState.part3StoppedEarly = false;
+            appState.recordingStartTime = Date.now();
+
+            navigateTo('screen-recording', true);
+
+            const simBanner = document.getElementById('simulated-mic-banner');
+            if (appState.isSimulatedMic) {
+                simBanner.classList.remove('hidden');
+                simBanner.classList.add('flex');
+            } else {
+                simBanner.classList.add('hidden');
+                simBanner.classList.remove('flex');
+            }
+
+            document.getElementById('recording-stage-title').textContent = "STAGE 1: DISCUSSION";
+            document.getElementById('recording-status-text').textContent = "🔴 DISCUSSION";
+            document.getElementById('recording-status-text').className = "text-xs font-extrabold uppercase tracking-wider text-red-600";
+
+            document.getElementById('recording-task-display').innerHTML = document.getElementById('prep-question-box').innerHTML;
+            document.getElementById('part3-transition-banner').classList.add('hidden');
+
+            const actionContainer = document.getElementById('recording-action-container');
+            actionContainer.innerHTML = `
+                <div class="flex flex-col sm:flex-row gap-3 w-full justify-center items-center">
+                    <button onclick="stopPart3EarlyInDiscussion()" class="w-full sm:w-1/2 bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 px-4 rounded-xl text-xs sm:text-sm shadow-md transition flex items-center justify-center space-x-1">
+                        <span>⏹ STOP & SUBMIT</span>
+                    </button>
+                    <button onclick="finishDiscussionAndGoToDecision()" class="w-full sm:w-1/2 bg-amber-600 hover:bg-amber-700 text-white font-bold py-3.5 px-4 rounded-xl text-xs sm:text-sm shadow-md transition flex items-center justify-center space-x-1">
+                        <span>FINISH DISCUSSION & GO TO DECISION →</span>
+                    </button>
+                </div>
+            `;
+
+            if (!appState.isSimulatedMic) {
+                setupMediaRecorderForDiscussion();
+                if (appState.mediaRecorder) appState.mediaRecorder.start(100);
+            }
+            runPart3DiscussionTimer(120);
+        }
+
+        function setupMediaRecorderForDiscussion() {
+            if (!appState.mediaStream) return;
+            const mime = detectSupportedMimeType();
+            appState.mimeType = mime;
+            const options = mime ? { mimeType: mime } : {};
+
+            try {
+                appState.mediaRecorder = new MediaRecorder(appState.mediaStream, options);
+            } catch (e) {
+                appState.mediaRecorder = new MediaRecorder(appState.mediaStream);
+                appState.mimeType = appState.mediaRecorder.mimeType || 'audio/webm';
+            }
+
+            appState.mediaRecorder.ondataavailable = (event) => {
+                if (event.data && event.data.size > 0) {
+                    appState.discussionChunks.push(event.data);
+                }
+            };
+
+            appState.mediaRecorder.onstop = () => {
+                const discBlob = new Blob(appState.discussionChunks, { type: appState.mimeType || 'audio/webm' });
+                appState.discussionBlob = discBlob;
+
+                if (appState.part3StoppedEarly) {
+                    appState.recordedBlob = discBlob;
+                    appState.recordedAudioUrl = URL.createObjectURL(discBlob);
+                    stopMicrophoneStream();
+                    prepareReviewScreen();
+                } else {
+                    startPart3DecisionRecording();
+                }
+            };
+        }
+
+        function stopPart3EarlyInDiscussion() {
+            stopAllTimers();
+            appState.part3StoppedEarly = true;
+            if (appState.recordingStartTime) {
+                appState.discussionDuration = Math.max(1, Math.round((Date.now() - appState.recordingStartTime) / 1000));
+                appState.recordingDuration = appState.discussionDuration;
+            }
+
+            if (appState.isSimulatedMic) {
+                const blob = createSyntheticAudioBlob(appState.recordingDuration);
+                appState.recordedBlob = blob;
+                appState.recordedAudioUrl = URL.createObjectURL(blob);
+                appState.mimeType = 'audio/wav';
+                prepareReviewScreen();
+                return;
+            }
+
+            if (appState.mediaRecorder && appState.mediaRecorder.state !== "inactive") {
+                appState.mediaRecorder.stop();
+            }
+        }
+
+        function finishDiscussionAndGoToDecision() {
+            stopAllTimers();
+            appState.part3StoppedEarly = false;
+            if (appState.recordingStartTime) {
+                appState.discussionDuration = Math.max(1, Math.round((Date.now() - appState.recordingStartTime) / 1000));
+            }
+
+            if (appState.isSimulatedMic) {
+                startPart3DecisionRecording();
+                return;
+            }
+
+            if (appState.mediaRecorder && appState.mediaRecorder.state !== "inactive") {
+                appState.mediaRecorder.stop();
+            }
+        }
+
         function runPart3DiscussionTimer(maxSeconds = 120) {
             stopAllTimers();
             let remaining = maxSeconds;
@@ -1188,57 +1496,79 @@
                     appState.discussionDuration = maxSeconds;
                     appState.recordingDuration = maxSeconds;
                     stopAllTimers();
-                    transitionPart3ToDecisionStage();
+                    finishDiscussionAndGoToDecision();
                 } else {
                     timerDisplay.textContent = formatTime(remaining);
                 }
             }, 250);
         }
 
-        function stopAndSubmitEarly() {
-            stopAllTimers();
-            if (appState.part3Stage === 1) {
-                appState.recordingDuration = appState.discussionDuration;
-            } else if (appState.part3Stage === 2) {
-                appState.recordingDuration = appState.discussionDuration + appState.decisionDuration;
-            }
-            stopRecordingManual();
-        }
-
-        function finishDiscussionEarly() {
-            stopAllTimers();
-            transitionPart3ToDecisionStage();
-        }
-
-        function transitionPart3ToDecisionStage() {
+        function startPart3DecisionRecording() {
             appState.part3Stage = 2;
+            appState.decisionStartTime = Date.now();
 
-            const stageTitle = document.getElementById('recording-stage-title');
-            const statusText = document.getElementById('recording-status-text');
+            document.getElementById('recording-stage-title').textContent = "STAGE 2: MAKE A DECISION";
+            document.getElementById('recording-status-text').textContent = "🟢 DECISION STAGE";
+            document.getElementById('recording-status-text').className = "text-xs font-extrabold uppercase tracking-wider text-emerald-600";
+
             const actionContainer = document.getElementById('recording-action-container');
-            const transitionBanner = document.getElementById('part3-transition-banner');
-
-            stageTitle.textContent = "STAGE 2: MAKE A DECISION";
-            statusText.textContent = "🟢 DECISION STAGE";
-            statusText.className = "text-xs font-extrabold uppercase tracking-wider text-emerald-600";
-            
             actionContainer.innerHTML = `
-                <button onclick="stopAndSubmitEarly()" class="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 px-8 rounded-xl text-sm shadow-md transition flex items-center justify-center space-x-2">
+                <button onclick="stopDecisionManual()" class="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 px-8 rounded-xl text-sm shadow-md transition flex items-center justify-center space-x-2">
                     <span>⏹ STOP & SUBMIT</span>
                 </button>
             `;
 
+            const transitionBanner = document.getElementById('part3-transition-banner');
             transitionBanner.classList.remove('hidden');
 
             setTimeout(() => {
                 transitionBanner.classList.add('hidden');
-                runPart3DecisionTimer(60);
             }, 2500);
+
+            if (!appState.isSimulatedMic) {
+                setupMediaRecorderForDecision();
+                if (appState.mediaRecorder) appState.mediaRecorder.start(100);
+            }
+            runPart3DecisionTimer(60);
         }
 
-        function runPart3DecisionTimer(totalSeconds = 60) {
+        function setupMediaRecorderForDecision() {
+            if (!appState.mediaStream) return;
+            const mime = detectSupportedMimeType();
+            appState.mimeType = mime;
+            const options = mime ? { mimeType: mime } : {};
+
+            try {
+                appState.mediaRecorder = new MediaRecorder(appState.mediaStream, options);
+            } catch (e) {
+                appState.mediaRecorder = new MediaRecorder(appState.mediaStream);
+                appState.mimeType = appState.mediaRecorder.mimeType || 'audio/webm';
+            }
+
+            appState.decisionChunks = [];
+            appState.mediaRecorder.ondataavailable = (event) => {
+                if (event.data && event.data.size > 0) {
+                    appState.decisionChunks.push(event.data);
+                }
+            };
+
+            appState.mediaRecorder.onstop = () => {
+                const decBlob = new Blob(appState.decisionChunks, { type: appState.mimeType || 'audio/webm' });
+                appState.decisionBlob = decBlob;
+
+                const combinedChunks = [...appState.discussionChunks, ...appState.decisionChunks];
+                const combinedBlob = new Blob(combinedChunks, { type: appState.mimeType || 'audio/webm' });
+                appState.recordedBlob = combinedBlob;
+                appState.recordedAudioUrl = URL.createObjectURL(combinedBlob);
+
+                stopMicrophoneStream();
+                prepareReviewScreen();
+            };
+        }
+
+        function runPart3DecisionTimer(maxSeconds = 60) {
             stopAllTimers();
-            let remaining = totalSeconds;
+            let remaining = maxSeconds;
             const timerDisplay = document.getElementById('recording-timer-display');
             timerDisplay.textContent = formatTime(remaining);
 
@@ -1246,31 +1576,60 @@
 
             appState.speakingTimerId = setInterval(() => {
                 const elapsed = Math.floor((Date.now() - startTime) / 1000);
-                remaining = totalSeconds - elapsed;
+                remaining = maxSeconds - elapsed;
                 appState.decisionDuration = elapsed;
-                appState.recordingDuration = appState.discussionDuration + appState.decisionDuration;
+                appState.recordingDuration = appState.discussionDuration + elapsed;
 
                 if (remaining <= 0) {
                     timerDisplay.textContent = "00:00";
-                    appState.decisionDuration = totalSeconds;
-                    appState.recordingDuration = appState.discussionDuration + totalSeconds;
-                    stopRecordingManual();
+                    appState.decisionDuration = maxSeconds;
+                    appState.recordingDuration = appState.discussionDuration + maxSeconds;
+                    stopDecisionManual();
                 } else {
                     timerDisplay.textContent = formatTime(remaining);
                 }
             }, 250);
         }
 
+        function stopDecisionManual() {
+            stopAllTimers();
+            if (appState.decisionStartTime) {
+                appState.decisionDuration = Math.max(1, Math.round((Date.now() - appState.decisionStartTime) / 1000));
+                appState.recordingDuration = appState.discussionDuration + appState.decisionDuration;
+            }
+
+            if (appState.isSimulatedMic) {
+                const blob = createSyntheticAudioBlob(appState.recordingDuration);
+                appState.recordedBlob = blob;
+                appState.recordedAudioUrl = URL.createObjectURL(blob);
+                appState.mimeType = 'audio/wav';
+                prepareReviewScreen();
+                return;
+            }
+
+            if (appState.mediaRecorder && appState.mediaRecorder.state !== "inactive") {
+                appState.mediaRecorder.stop();
+            }
+        }
+
         function stopRecordingManual() {
             stopAllTimers();
 
-            // Calculate actual recording duration cleanly from start timestamp
             if (appState.recordingStartTime) {
                 const actualElapsedSec = Math.max(1, Math.round((Date.now() - appState.recordingStartTime) / 1000));
-                // Only override if not already set to max by auto-expiry
                 if (!appState.recordingDuration || appState.recordingDuration < actualElapsedSec) {
                     appState.recordingDuration = actualElapsedSec;
                 }
+            }
+
+            if (appState.isSimulatedMic) {
+                const blob = createSyntheticAudioBlob(appState.recordingDuration);
+                appState.recordedBlob = blob;
+                appState.recordedAudioUrl = URL.createObjectURL(blob);
+                appState.mimeType = 'audio/wav';
+                appState.isRecording = false;
+                prepareReviewScreen();
+                return;
             }
 
             if (appState.mediaRecorder && appState.mediaRecorder.state !== "inactive") {
@@ -1286,9 +1645,8 @@
             }
         }
 
-        function cleanupRecordingState() {
+        function cleanupRecordingStateExceptStream() {
             stopAllTimers();
-            stopMicrophoneStream();
 
             if (appState.recordedAudioUrl) {
                 URL.revokeObjectURL(appState.recordedAudioUrl);
@@ -1296,21 +1654,32 @@
 
             appState.mediaRecorder = null;
             appState.audioChunks = [];
+            appState.discussionChunks = [];
+            appState.discussionBlob = null;
+            appState.decisionChunks = [];
+            appState.decisionBlob = null;
             appState.recordedBlob = null;
             appState.recordedAudioUrl = null;
             appState.recordingStartTime = null;
+            appState.decisionStartTime = null;
             appState.recordingDuration = 0;
             appState.discussionDuration = 0;
             appState.decisionDuration = 0;
             appState.part3Stage = 1;
+            appState.part3StoppedEarly = false;
             appState.isRecording = false;
+        }
+
+        function cleanupRecordingState() {
+            stopMicrophoneStream();
+            cleanupRecordingStateExceptStream();
         }
 
         /* ==========================================================================
            9. REVIEW & RECORD AGAIN LOGIC
            ========================================================================== */
         function prepareReviewScreen() {
-            navigateTo('screen-review');
+            navigateTo('screen-review', true);
 
             document.getElementById('review-student-name').textContent = appState.studentName;
             document.getElementById('review-class-name').textContent = appState.className;
@@ -1324,18 +1693,35 @@
             audioEl.src = appState.recordedAudioUrl;
         }
 
-        function handleRecordAgain() {
-            cleanupRecordingState();
+        async function handleRecordAgain() {
+            const audioEl = document.getElementById('audio-playback');
+            if (audioEl) {
+                audioEl.pause();
+                audioEl.currentTime = 0;
+            }
+
+            // Stay within current active task flow
+            lockActiveSession();
 
             if (appState.selectedPart === 1) {
+                appState.isRecordAgain = false;
+                cleanupRecordingStateExceptStream();
                 selectPart1();
-            } else {
-                confirmStartTopic();
+            } else if (appState.selectedPart === 2) {
+                appState.isRecordAgain = true;
+                await ensureMicAndExecute(() => {
+                    startPart2Recording();
+                });
+            } else if (appState.selectedPart === 3) {
+                appState.isRecordAgain = true;
+                await ensureMicAndExecute(() => {
+                    startPart3DiscussionRecording();
+                });
             }
         }
 
         /* ==========================================================================
-           10. SUBMISSION & GOOGLE APPS SCRIPT UPLOAD
+           10. SUBMISSION & GOOGLE APPS SCRIPT UPLOAD (PART A)
            ========================================================================== */
         function blobToBase64(blob) {
             return new Promise((resolve, reject) => {
@@ -1405,7 +1791,7 @@
                     audioData: base64Audio
                 };
 
-                // Send POST request to Submission Apps Script endpoint (UNCHANGED)
+                // POST to new Google Apps Script Submission Backend
                 const response = await fetch(GOOGLE_APPS_SCRIPT_WEB_APP_URL, {
                     method: 'POST',
                     headers: {
@@ -1414,18 +1800,27 @@
                     body: JSON.stringify(payload)
                 });
 
-                const result = await response.json();
+                if (!response.ok) {
+                    throw new Error(`Server returned HTTP ${response.status}`);
+                }
 
-                if (result.success || response.ok) {
+                let result;
+                try {
+                    result = await response.json();
+                } catch (e) {
+                    throw new Error("Invalid JSON response from server");
+                }
+
+                if (result.success || result.status === 'success' || result.status === 'ok') {
+                    unlockActiveSession();
                     showSuccessScreen();
-                    recordInLocalDashboard(payload);
                 } else {
-                    throw new Error(result.message || "Upload failed");
+                    throw new Error(result.message || result.error || "Submission rejected by server");
                 }
 
             } catch (error) {
                 console.error("Submission error:", error);
-                showToast("Upload failed. Please check your connection and try again.", "error");
+                showToast(`Upload failed: ${error.message || 'Network error'}. Please try SUBMIT again.`, "error");
             } finally {
                 appState.isUploading = false;
                 submitBtn.disabled = false;
@@ -1439,221 +1834,236 @@
             document.getElementById('success-part').textContent = `Part ${appState.selectedPart}`;
             document.getElementById('success-duration').textContent = formatTime(appState.recordingDuration);
 
-            navigateTo('screen-success');
+            navigateTo('screen-success', true);
         }
 
         function restartPractice() {
+            appState.isRecordAgain = false;
+            unlockActiveSession();
             cleanupRecordingState();
-            navigateTo('screen-choose-part');
+            navigateTo('screen-choose-part', true);
         }
 
         /* ==========================================================================
-           11. TEACHER DASHBOARD LOGIC
+           11. TEACHER DASHBOARD LOGIC (PART C, D, E, F)
            ========================================================================== */
-        const localDashboardRecords = [];
-
         function promptTeacherPassword() {
-            if (teacherUnlocked) {
-                openTeacherDashboard();
-                return;
-            }
-            const modal = document.getElementById('teacher-auth-modal');
-            const input = document.getElementById('input-teacher-password');
-            const errorMsg = document.getElementById('password-error-msg');
-            
-            if (input) input.value = '';
-            if (errorMsg) errorMsg.classList.add('hidden');
-            if (modal) modal.classList.remove('hidden');
-            setTimeout(() => { if (input) input.focus(); }, 100);
+            document.getElementById('input-teacher-password').value = "";
+            document.getElementById('password-error-msg').classList.add('hidden');
+            document.getElementById('teacher-auth-modal').classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('input-teacher-password').focus();
+            }, 100);
         }
 
         function closeTeacherAuthModal() {
-            const modal = document.getElementById('teacher-auth-modal');
-            const input = document.getElementById('input-teacher-password');
-            const errorMsg = document.getElementById('password-error-msg');
-            
-            if (modal) modal.classList.add('hidden');
-            if (input) input.value = '';
-            if (errorMsg) errorMsg.classList.add('hidden');
+            document.getElementById('teacher-auth-modal').classList.add('hidden');
         }
 
         function handleTeacherPasswordSubmit(e) {
             e.preventDefault();
-            const input = document.getElementById('input-teacher-password');
-            const errorMsg = document.getElementById('password-error-msg');
-            const password = input ? input.value : '';
-
-            if (password === TEACHER_PASSWORD) {
+            const input = document.getElementById('input-teacher-password').value;
+            if (input === TEACHER_PASSWORD) {
                 teacherUnlocked = true;
                 closeTeacherAuthModal();
-                openTeacherDashboard();
+                navigateTo('screen-teacher-dashboard', true);
+                fetchTeacherDashboardData();
             } else {
-                if (errorMsg) errorMsg.classList.remove('hidden');
-                if (input) {
-                    input.value = '';
-                    input.focus();
-                }
+                document.getElementById('password-error-msg').classList.remove('hidden');
             }
         }
 
         function lockTeacherDashboard() {
             teacherUnlocked = false;
-            navigateTo('screen-welcome');
+            showToast("Teacher Dashboard locked.", "info");
+            navigateTo('screen-welcome', true);
         }
 
-        function recordInLocalDashboard(data) {
-            localDashboardRecords.unshift({
-                id: data.id || ('sub_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7)),
-                student: data.studentName,
-                class: data.className,
-                part: data.part,
-                topic: data.topicTitle,
-                date: data.date,
-                time: data.time,
-                duration: data.recordingDuration,
-                status: "Submitted",
-                audioUrl: appState.recordedAudioUrl || (data.audioData ? `data:${data.mimeType || 'audio/webm'};base64,${data.audioData}` : ''),
-                fileUrl: data.fileUrl || data.driveUrl || data.url || ''
-            });
-        }
+        async function fetchTeacherDashboardData() {
+            const tbody = document.getElementById('dashboard-table-body');
+            const refreshBtn = document.getElementById('btn-refresh-dashboard');
+            const refreshIcon = document.getElementById('refresh-icon');
 
-        function openTeacherDashboard() {
-            if (!teacherUnlocked) {
-                promptTeacherPassword();
-                return;
-            }
-            navigateTo('screen-teacher-dashboard');
-            renderDashboardData();
-            fetchBackendDashboardData();
-        }
+            if (refreshBtn) refreshBtn.disabled = true;
+            if (refreshIcon) refreshIcon.classList.add('animate-spin');
 
-        function renderDashboardData() {
-            const tableBody = document.getElementById('dashboard-table-body');
-            
-            let p1Count = 0, p2Count = 0, p3Count = 0;
-            localDashboardRecords.forEach(r => {
-                if (r.part && r.part.includes('1')) p1Count++;
-                if (r.part && r.part.includes('2')) p2Count++;
-                if (r.part && r.part.includes('3')) p3Count++;
-            });
+            tbody.innerHTML = `<tr><td colspan="8" class="p-6 text-center text-slate-400">Loading live submissions from cloud...</td></tr>`;
 
-            document.getElementById('dash-total').textContent = localDashboardRecords.length;
-            document.getElementById('dash-part1').textContent = p1Count;
-            document.getElementById('dash-part2').textContent = p2Count;
-            document.getElementById('dash-part3').textContent = p3Count;
-
-            if (localDashboardRecords.length === 0) {
-                tableBody.innerHTML = `
-                    <tr>
-                        <td colspan="9" class="p-6 text-center text-slate-400">No submissions yet.</td>
-                    </tr>
-                `;
-                return;
-            }
-
-            tableBody.innerHTML = localDashboardRecords.map((r, index) => {
-                const audioSource = r.audioUrl || r.fileUrl || (r.audioData ? `data:${r.mimeType || 'audio/webm'};base64,${r.audioData}` : '') || r.driveUrl || r.url || '';
+            try {
+                const getUrl = `${GOOGLE_APPS_SCRIPT_WEB_APP_URL}?action=getSubmissions`;
+                const response = await fetch(getUrl);
                 
-                let audioCell = `<span class="text-slate-400 text-xs italic">No audio</span>`;
-                if (audioSource) {
-                    audioCell = `
-                        <div class="flex items-center gap-1.5">
-                            <audio controls preload="none" class="h-8 w-44 sm:w-52 rounded-lg bg-slate-100" src="${audioSource}"></audio>
-                            ${r.fileUrl || r.driveUrl ? `<a href="${r.fileUrl || r.driveUrl}" target="_blank" title="Open in Drive" class="p-1.5 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition text-xs font-bold">🔗</a>` : ''}
-                        </div>
-                    `;
+                if (!response.ok) {
+                    throw new Error(`HTTP Error ${response.status}`);
                 }
 
-                const recId = r.id || `sub_${index}`;
+                const data = await response.json();
+                let submissions = [];
+
+                if (Array.isArray(data)) {
+                    submissions = data;
+                } else if (data && Array.isArray(data.submissions)) {
+                    submissions = data.submissions;
+                } else if (data && Array.isArray(data.data)) {
+                    submissions = data.data;
+                } else if (data && Array.isArray(data.items)) {
+                    submissions = data.items;
+                }
+
+                // Filter out deleted submissions
+                const activeSubmissions = submissions.filter(item => {
+                    const status = item.Status || item.status || "";
+                    return String(status).toLowerCase() !== "deleted";
+                });
+
+                renderDashboardTable(activeSubmissions);
+
+            } catch (err) {
+                console.error("Dashboard Fetch Error:", err);
+                tbody.innerHTML = `<tr><td colspan="8" class="p-6 text-center text-red-500 font-semibold">Failed to fetch submissions from server. Please click REFRESH to try again.</td></tr>`;
+                showToast("Failed to load submissions from Apps Script.", "error");
+            } finally {
+                if (refreshBtn) refreshBtn.disabled = false;
+                if (refreshIcon) refreshIcon.classList.remove('animate-spin');
+            }
+        }
+
+        function renderDashboardTable(submissions) {
+            const tbody = document.getElementById('dashboard-table-body');
+            let p1Count = 0, p2Count = 0, p3Count = 0;
+
+            if (!submissions || submissions.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" class="p-6 text-center text-slate-400">No active submissions found.</td></tr>`;
+                document.getElementById('dash-total').textContent = "0";
+                document.getElementById('dash-part1').textContent = "0";
+                document.getElementById('dash-part2').textContent = "0";
+                document.getElementById('dash-part3').textContent = "0";
+                return;
+            }
+
+            tbody.innerHTML = submissions.map((sub, index) => {
+                const id = sub.ID || sub.id || "";
+                const studentName = sub["Student Name"] || sub.studentName || "Anonymous";
+                const className = sub.Class || sub.className || "-";
+                const part = sub.Part || sub.part || "-";
+                const topic = sub.Topic || sub.topicTitle || sub.Question || sub.question || "Topic";
+                const date = sub.Date || sub.date || "";
+                const time = sub.Time || sub.time || "";
+                const duration = sub.Duration || sub.recordingDuration || "-";
+                const fileId = sub["File ID"] || sub.fileId || "";
+                const audioUrl = sub["Audio URL"] || sub.audioUrl || sub.AudioURL || sub["Audio Drive URL"] || "";
+
+                if (String(part).includes('1')) p1Count++;
+                else if (String(part).includes('2')) p2Count++;
+                else if (String(part).includes('3')) p3Count++;
+
+                let audioHtml = `<span class="text-xs text-slate-400 italic">Audio unavailable</span>`;
+                if (audioUrl && audioUrl.trim().length > 0) {
+                    audioHtml = `<audio controls preload="none" src="${audioUrl}" class="h-8 w-44 sm:w-48"></audio>`;
+                }
+
+                // Escape double quotes for inline event parameters
+                const safeId = String(id).replace(/'/g, "\\'");
+                const safeFileId = String(fileId).replace(/'/g, "\\'");
 
                 return `
                     <tr class="border-b border-slate-100 hover:bg-slate-50 transition">
-                        <td class="p-3 font-semibold text-slate-800">${r.student || '-'}</td>
-                        <td class="p-3">${r.class || '-'}</td>
-                        <td class="p-3 font-bold text-blue-600">${r.part || '-'}</td>
-                        <td class="p-3 truncate max-w-[120px]">${r.topic || '-'}</td>
-                        <td class="p-3 whitespace-nowrap">${r.date || '-'}</td>
-                        <td class="p-3 whitespace-nowrap">${r.time || '-'}</td>
-                        <td class="p-3 font-mono">${r.duration || '-'}</td>
-                        <td class="p-3">${audioCell}</td>
+                        <td class="p-3 font-bold text-slate-800">${studentName}</td>
+                        <td class="p-3 font-semibold text-slate-600">${className}</td>
+                        <td class="p-3">
+                            <span class="px-2.5 py-1 rounded-full text-xs font-extrabold ${String(part).includes('1') ? 'bg-blue-50 text-blue-700' : String(part).includes('2') ? 'bg-purple-50 text-purple-700' : 'bg-emerald-50 text-emerald-700'}">
+                                ${part}
+                            </span>
+                        </td>
+                        <td class="p-3 text-slate-700 max-w-[180px] truncate" title="${topic}">${topic}</td>
+                        <td class="p-3 text-slate-500 text-xs">${date} <span class="text-slate-400">${time}</span></td>
+                        <td class="p-3 font-mono font-semibold text-slate-700">${duration}</td>
+                        <td class="p-3">${audioHtml}</td>
                         <td class="p-3 text-center">
-                            <button id="del-btn-${recId}" onclick="confirmDeleteSubmission('${recId}')" class="px-2.5 py-1.5 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 rounded-xl font-bold text-xs transition flex items-center justify-center gap-1 mx-auto" title="Delete submission">
+                            <button onclick="confirmDeleteRecording('${safeId}', '${safeFileId}')" 
+                                class="bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 px-2.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 mx-auto">
                                 🗑️ Delete
                             </button>
                         </td>
                     </tr>
                 `;
             }).join('');
+
+            document.getElementById('dash-total').textContent = submissions.length;
+            document.getElementById('dash-part1').textContent = p1Count;
+            document.getElementById('dash-part2').textContent = p2Count;
+            document.getElementById('dash-part3').textContent = p3Count;
         }
 
-        function confirmDeleteSubmission(id) {
-            const btn = document.getElementById(`del-btn-${id}`);
-            if (!btn) return;
+        function confirmDeleteRecording(id, fileId) {
+            pendingDeleteId = id;
+            pendingDeleteFileId = fileId;
+            document.getElementById('delete-confirm-modal').classList.remove('hidden');
+        }
 
-            if (btn.dataset.confirm === "true") {
-                deleteSubmission(id);
-            } else {
-                btn.dataset.confirm = "true";
-                btn.className = "px-2.5 py-1.5 bg-red-600 text-white rounded-xl font-bold text-xs transition shadow-md flex items-center justify-center gap-1 mx-auto animate-pulse";
-                btn.innerHTML = "⚠️ Confirm Delete?";
+        function closeDeleteConfirmModal() {
+            pendingDeleteId = null;
+            pendingDeleteFileId = null;
+            document.getElementById('delete-confirm-modal').classList.add('hidden');
+        }
 
-                setTimeout(() => {
-                    if (btn && btn.dataset.confirm === "true") {
-                        btn.dataset.confirm = "false";
-                        btn.className = "px-2.5 py-1.5 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 rounded-xl font-bold text-xs transition flex items-center justify-center gap-1 mx-auto";
-                        btn.innerHTML = "🗑️ Delete";
-                    }
-                }, 3000);
+        async function executeDeleteRecording() {
+            if (!pendingDeleteId) {
+                closeDeleteConfirmModal();
+                return;
             }
-        }
 
-        async function deleteSubmission(id) {
-            const index = localDashboardRecords.findIndex(r => (r.id && r.id === id) || (`sub_${localDashboardRecords.indexOf(r)}` === id));
-            
-            if (index !== -1) {
-                const deletedItem = localDashboardRecords.splice(index, 1)[0];
-                renderDashboardData();
-                showToast(`Deleted submission for ${deletedItem.student || 'student'}.`, 'success');
+            const confirmBtn = document.getElementById('btn-confirm-delete');
+            confirmBtn.disabled = true;
+            confirmBtn.textContent = "DELETING...";
 
-                try {
-                    fetch(`${GOOGLE_APPS_SCRIPT_WEB_APP_URL}?action=delete&id=${encodeURIComponent(id)}`, { method: 'GET', mode: 'no-cors' }).catch(() => {});
-                } catch (e) {
-                    // silent catch
-                }
-            }
-        }
-
-        async function fetchBackendDashboardData() {
             try {
-                const res = await fetch(GOOGLE_APPS_SCRIPT_WEB_APP_URL + "?action=getSubmissions");
-                if (res.ok) {
-                    const data = await res.json();
-                    if (data && Array.isArray(data.submissions) && data.submissions.length > 0) {
-                        localDashboardRecords.length = 0;
-                        data.submissions.forEach((item, idx) => {
-                            localDashboardRecords.push({
-                                id: item.id || item.submissionId || `sub_remote_${idx}`,
-                                student: item.student || item.studentName,
-                                class: item.class || item.className,
-                                part: item.part,
-                                topic: item.topic || item.topicTitle,
-                                date: item.date,
-                                time: item.time,
-                                duration: item.duration || item.recordingDuration,
-                                status: "Submitted",
-                                audioUrl: item.audioUrl || item.fileUrl || item.url || item.driveUrl || (item.audioData ? `data:${item.mimeType || 'audio/webm'};base64,${item.audioData}` : ''),
-                                fileUrl: item.fileUrl || item.driveUrl || item.url || ''
-                            });
-                        });
-                        renderDashboardData();
-                    }
+                const payload = {
+                    action: "deleteRecording",
+                    id: pendingDeleteId,
+                    fileId: pendingDeleteFileId || ""
+                };
+
+                const response = await fetch(GOOGLE_APPS_SCRIPT_WEB_APP_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'text/plain;charset=utf-8'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error ${response.status}`);
                 }
-            } catch (e) {
-                console.log("Apps Script GET unavailable or no records returned.");
+
+                let result;
+                try {
+                    result = await response.json();
+                } catch (e) {
+                    throw new Error("Invalid response from server");
+                }
+
+                if (result.success || result.status === 'success' || result.status === 'ok') {
+                    showToast("Recording deleted and moved to Drive Trash.", "success");
+                    closeDeleteConfirmModal();
+                    fetchTeacherDashboardData(); // Refresh list immediately
+                } else {
+                    throw new Error(result.message || result.error || "Deletion failed on server");
+                }
+
+            } catch (err) {
+                console.error("Delete Error:", err);
+                showToast(`Failed to delete recording: ${err.message}`, "error");
+                closeDeleteConfirmModal();
+            } finally {
+                confirmBtn.disabled = false;
+                confirmBtn.textContent = "DELETE";
             }
         }
 
-        // Pre-fetch Question Bank on page load
+        /* ==========================================================================
+           12. INITIALIZATION
+           ========================================================================== */
         window.onload = function() {
             fetchQuestionsFromBank();
         };
